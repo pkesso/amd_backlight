@@ -17,7 +17,7 @@ function increase {
         then
             NEXT_STEP=$MAX
     fi
-    xrandr --output eDP --brightness $NEXT_STEP 
+    xrandr --output eDP --brightness "$NEXT_STEP"
 }
 
 function decrease {
@@ -26,7 +26,7 @@ function decrease {
         then
             NEXT_STEP=$MIN
     fi
-    xrandr --output eDP --brightness $NEXT_STEP 
+    xrandr --output eDP --brightness "$NEXT_STEP"
 }
 
 if [ -z "$1" ]
