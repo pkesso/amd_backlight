@@ -1,33 +1,44 @@
 #!/bin/bash
-# xrandr --output eDP --brightness $(xrandr --display :0.0 --screen 0 --verbose | awk '/Brightness/ { print $2 - 0.10; exit }')
+
+if [ ! "$(which xrandr)" ]
+    then
+        echo 'xrandr must be installed'
+        exit 1
+fi
 
 CURRENT=$(xrandr --display :0.0 --screen 0 --verbose | awk '/Brightness/ {print $2}')
 MIN=0.3
 MAX=1
 
-
-function usage {
+usage () {
     echo 'Usage: backlight.sh inc|dec [step]'
     exit 1
 }
 
-function increase {
-    NEXT_STEP=$(echo "scale=2; $CURRENT + $STEP" | bc)
-    if [ $(echo "$NEXT_STEP > $MAX" | bc -l) -eq 1 ] 
+increase () {
+    local BRIGHTNESS=$(echo "scale=2; $CURRENT + $STEP" | bc)
+    if [ $(echo "$BRIGHTNESS > $MAX" | bc -l) -eq 1 ] 
         then
-            NEXT_STEP=$MAX
+            BRIGHTNESS=$MAX
     fi
-    xrandr --output eDP --brightness "$NEXT_STEP"
+    echo "$BRIGHTNESS"
 }
 
-function decrease {
-    NEXT_STEP=$(echo "scale=2; $CURRENT - $STEP" | bc)
-    if [ $(echo "$NEXT_STEP < $MIN" | bc -l) -eq 1 ] 
+decrease () {
+    local BRIGHTNESS=$(echo "scale=2; $CURRENT - $STEP" | bc)
+    if [ $(echo "$BRIGHTNESS < $MIN" | bc -l) -eq 1 ] 
         then
-            NEXT_STEP=$MIN
+            BRIGHTNESS=$MIN
     fi
-    xrandr --output eDP --brightness "$NEXT_STEP"
+    echo "$BRIGHTNESS"
 }
+
+apply () {
+    BRIGHTNESS=$1
+    xrandr --output eDP --brightness "$BRIGHTNESS"
+}
+
+
 
 if [ -z "$1" ]
     then
@@ -45,10 +56,10 @@ fi
 
 case $SIGN in
     inc)
-        increase
+        apply "$(increase)"
         ;;
     dec)
-        decrease
+        apply "$(decrease)"
         ;;
     *)
         usage
