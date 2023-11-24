@@ -11,7 +11,7 @@ MIN=0.3
 MAX=1
 
 usage () {
-    echo 'Usage: backlight.sh inc|dec [step]'
+    echo 'Usage: backlight_xrandr.sh inc|dec [step]'
     exit 1
 }
 
