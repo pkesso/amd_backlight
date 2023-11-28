@@ -16,8 +16,9 @@ usage () {
 }
 
 increase () {
-    local BRIGHTNESS=$(echo "scale=2; $CURRENT + $STEP" | bc)
-    if [ $(echo "$BRIGHTNESS > $MAX" | bc -l) -eq 1 ] 
+    local BRIGHTNESS
+    BRIGHTNESS=$(echo "scale=2; $CURRENT + $STEP" | bc)
+    if [ "$(echo "$BRIGHTNESS > $MAX" | bc -l)" -eq 1 ] 
         then
             BRIGHTNESS=$MAX
     fi
@@ -25,8 +26,9 @@ increase () {
 }
 
 decrease () {
-    local BRIGHTNESS=$(echo "scale=2; $CURRENT - $STEP" | bc)
-    if [ $(echo "$BRIGHTNESS < $MIN" | bc -l) -eq 1 ] 
+    local BRIGHTNESS
+    BRIGHTNESS=$(echo "scale=2; $CURRENT - $STEP" | bc)
+    if [ "$(echo "$BRIGHTNESS < $MIN" | bc -l)" -eq 1 ] 
         then
             BRIGHTNESS=$MIN
     fi

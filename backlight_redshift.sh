@@ -30,14 +30,17 @@ usage () {
 }
 
 increase () {
-    local BRIGHTNESS=$(echo "scale=2; $BRIGHTNESS_CURRENT + $BRIGHTNESS_STEP" | bc)
-    if [ $(echo "$BRIGHTNESS > $BRIGHTNESS_MAX" | bc -l) -eq 1 ] 
+    local BRIGHTNESS
+    BRIGHTNESS=$(echo "scale=2; $BRIGHTNESS_CURRENT + $BRIGHTNESS_STEP" | bc)
+    if [ "$(echo "$BRIGHTNESS > $BRIGHTNESS_MAX" | bc -l)" -eq 1 ] 
         then
             BRIGHTNESS=$BRIGHTNESS_MAX
     fi
-    local COLORTEMP=$(echo "$COLORTEMP_CURRENT + $COLORTEMP_STEP" | bc)
 
-    if [ $(echo "$COLORTEMP > $COLORTEMP_MAX" | bc -l) -eq 1 ] 
+    local COLORTEMP
+    COLORTEMP=$(echo "$COLORTEMP_CURRENT + $COLORTEMP_STEP" | bc)
+
+    if [ "$(echo "$COLORTEMP > $COLORTEMP_MAX" | bc -l)" -eq 1 ] 
         then
             COLORTEMP=$COLORTEMP_MAX
     fi
@@ -46,14 +49,16 @@ increase () {
 }
 
 decrease () {
-    local BRIGHTNESS=$(echo "scale=2; $BRIGHTNESS_CURRENT - $BRIGHTNESS_STEP" | bc)
-    if [ $(echo "$BRIGHTNESS < $BRIGHTNESS_MIN" | bc -l) -eq 1 ] 
+    local BRIGHTNESS
+    BRIGHTNESS=$(echo "scale=2; $BRIGHTNESS_CURRENT - $BRIGHTNESS_STEP" | bc)
+    if [ "$(echo "$BRIGHTNESS < $BRIGHTNESS_MIN" | bc -l)" -eq 1 ] 
         then
             BRIGHTNESS=$BRIGHTNESS_MIN
     fi
 
-    local COLORTEMP=$(echo "$COLORTEMP_CURRENT - $COLORTEMP_STEP" | bc)
-    if [ $(echo "$COLORTEMP < $COLORTEMP_MIN" | bc -l) -eq 1 ] 
+    local COLORTEMP
+    COLORTEMP=$(echo "$COLORTEMP_CURRENT - $COLORTEMP_STEP" | bc)
+    if [ "$(echo "$COLORTEMP < $COLORTEMP_MIN" | bc -l)" -eq 1 ] 
         then
             COLORTEMP=$COLORTEMP_MIN
     fi
@@ -63,14 +68,14 @@ decrease () {
 
 apply () {
     #read BRIGHTNESS COLORTEMP < <($1)
-    BRIGHTNESS=$(echo $1 | cut -f 1 -d ' ')
-    COLORTEMP=$(echo $1 | cut -f 2 -d ' ')
+    BRIGHTNESS=$(echo "$1" | cut -f 1 -d ' ')
+    COLORTEMP=$(echo "$1" | cut -f 2 -d ' ')
 
     echo "BRIGHTNESS $BRIGHTNESS"
     echo "COLORTEMP $COLORTEMP"
     echo "brightness $BRIGHTNESS" > "$STATUS_FILE"
     echo "colortemp $COLORTEMP" >> "$STATUS_FILE"
-    redshift -P -O ${COLORTEMP}K -b $BRIGHTNESS >/dev/null
+    redshift -P -O "${COLORTEMP}K" -b "$BRIGHTNESS" >/dev/null
 }
 
 
